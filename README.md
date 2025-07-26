@@ -1,24 +1,14 @@
-\# FullStackKRG-2B
+# Simple HTML Project
 
+This is a basic HTML project created by **Garvi Dabas**.  
+It demonstrates a simple web page using only HTML.
 
+## 📁 Files Included
 
-This is a simple HTML project for Experiment-1.
+- `index.html` – Main HTML file
 
+## 🚀 How to View
 
-
-\## Contents
-
-
-
-\- `Exp-1.html` - Contains the webpage
-
-
-
-\## Author
-
-
-
-Garvi Dabas
-
-
+You can open the `index.html` file in any web browser  
+or view it live using GitHub Pages (if enabled):
 
