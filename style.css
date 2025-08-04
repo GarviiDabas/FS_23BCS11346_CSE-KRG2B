@@ -1,0 +1,42 @@
+/* External CSS */
+h1{
+    color: brown;
+}
+.f1{
+    color: aqua;
+}
+#f2{
+    color: beige;
+}
+#f3{
+    color: blue;
+}
+div{
+    border: 5px solid blueviolet;
+    height: 100px;
+    width: 100px;
+    margin: 10px;
+    padding: 5px 2px 5px 10px;
+    /* top right bottom left */
+    /* font */
+    /* Positions Fixed, Relative, Static, Sticky*/
+    position: static;
+}
+/* #d2{position: fixed;} */
+#d3{
+    position: sticky;
+    top: 20px;
+}
+#flex-container{
+    display: flex;
+    flex-direction:column;
+}
+
+/* Margin is a space between the elements */
+/* Box Model-- margin >>> border >>> padding  */
+body{
+    background-color:khaki;
+    background-position: top;
+    height: 2000px;
+    /* background-image: url(https://images.pexels.com/photos/172292/pexels-photo-172292.jpeg?cs=srgb&dl=pexels-fwstudio-33348-172292.jpg&fm=jpg); */
+}
