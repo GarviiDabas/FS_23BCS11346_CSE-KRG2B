@@ -6,12 +6,14 @@ This is a simple HTML portfolio project for **Experiment-1** of the Full Stack W
 
 - `Exp-1.html` – A personal portfolio page with skills, projects, education, and contact form.
 - `Exp-1.css` – Basic styling for the portfolio page.
-
+- 'TailWindForm.html' -	A stylish and responsive form built using Tailwind CSS utility classes.
+  
 ## 🔧 Technologies Used
 
 - HTML5 (Forms, Tables, Lists)
 - CSS3 (Basic Styling)
-
+- Tailwind CSS – Utility-first CSS framework used in TailWindForm.html for rapid UI design
+  
 ## 👨‍💻 Author
 
 **Garvi Dabas**  
