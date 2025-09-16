@@ -1,28 +1,38 @@
-# FullStackKRG-2B
+FullStackKRG-2B
 
-This is a simple HTML portfolio project for **Experiment-1** of the Full Stack Web Development course.
+This repository contains experiments from the Full Stack Web Development (KRG-2B) course.
 
-## 📄 Files Included
+📄 Experiments
+🔹 Experiment 1: Portfolio (HTML & CSS)
 
-- `Exp-1.html` – A personal portfolio page with skills, projects, education, and contact form.
-- `Exp-1.css` – Basic styling for the portfolio page.
-- `TailWindForm.html` -	A stylish and responsive form built using Tailwind CSS utility classes.
-  
-## 🔧 Technologies Used
+Files: Exp-1.html, Exp-1.css, TailWindForm.html
 
-- HTML5 (Forms, Tables, Lists)
-- CSS3 (Basic Styling)
-- Tailwind CSS – Utility-first CSS framework used in TailWindForm.html for rapid UI design
-  
-## 👨‍💻 Author
+Simple personal portfolio with skills, projects, and a Tailwind CSS form.
 
-**Garvi Dabas**  
-Frontend Developer | Student at Chandigarh University  
-[LinkedIn Profile](https://www.linkedin.com/in/garvi-dabas-830a52323/)
+🔹 Experiment 2: Dynamic Product Filter (JavaScript & DOM)
 
-## 📅 Submission Details
+Product filtering using dropdowns, DOM manipulation, and Array.filter().
 
-- **Course**: Full Stack KRG-2B  
-- **University Roll No**: 23BCS11346  
-- **Semester**: 3rd  
-- **Year**: 2025
+🔹 Experiment 3: Library Management UI (React)
+
+Files: App.js, db.json
+
+React-based library system with CRUD (Create, Read, Update, Delete) and search functionality.
+
+🔧 Technologies Used
+
+HTML5, CSS3, Tailwind CSS, JavaScript (DOM), React.js, JSON Server, Node.js
+
+👨‍💻 Author
+
+Garvi Dabas
+Frontend Developer | Student at Chandigarh University
+LinkedIn
+
+📅 Submission Details
+
+Course: Full Stack KRG-2B
+
+Roll No: 23BCS11346
+
+Semester: 3rd (2025)
