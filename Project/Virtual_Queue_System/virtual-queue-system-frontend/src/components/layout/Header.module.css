@@ -1,0 +1,37 @@
+/* src/components/layout/Header.module.css */
+.header {
+    background-color: #B91C1C; /* Brand Red/Maroon */
+    color: white;
+    padding: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); /* Stronger shadow for the header */
+}
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo {
+    font-size: 1.6rem; /* Slightly larger */
+    font-weight: 800; /* Extra bold */
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: inherit;
+}
+.nav {
+    display: flex;
+    gap: 1.5rem; /* More space between links */
+    align-items: center;
+}
+.navLink {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+.navLink:hover {
+    color: #FEE2E2; /* Light hover color */
+    border-bottom: 2px solid white; /* Visual indicator */
+}
