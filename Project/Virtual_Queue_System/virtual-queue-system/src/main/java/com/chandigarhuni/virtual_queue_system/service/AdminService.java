@@ -1,5 +1,8 @@
 package com.chandigarhuni.virtual_queue_system.service;
+import java.util.stream.Collectors; // <-- ADD THIS IMPORT
 
+import com.chandigarhuni.virtual_queue_system.dto.QueueDetailsDTO;
+import com.chandigarhuni.virtual_queue_system.dto.TokenDetailsDTO;
 import com.chandigarhuni.virtual_queue_system.model.Queue;
 import com.chandigarhuni.virtual_queue_system.model.Token;
 import com.chandigarhuni.virtual_queue_system.repository.QueueRepository;
@@ -104,5 +107,26 @@ public class AdminService {
         }
 
         return savedQueue;
+    }
+    @Transactional(readOnly = true) // This is a read-only operation
+    public QueueDetailsDTO getQueueDetails(Long queueId) {
+        // 1. Find the queue
+        Queue queue = queueRepository.findById(queueId)
+                .orElseThrow(() -> new RuntimeException("Queue not found"));
+
+        // 2. Find all WAITING tokens for this queue
+        List<Token> waitingTokens = tokenRepository.findByQueueAndStatus(queue, "WAITING");
+
+        // 3. Sort them by token number and map them to our DTO
+        List<TokenDetailsDTO> tokenDetails = waitingTokens.stream()
+                .sorted(Comparator.comparing(Token::getTokenNumber))
+                .map(token -> new TokenDetailsDTO(
+                        token.getTokenNumber(),
+                        token.getUser().getName() // Get the user's name
+                ))
+                .collect(Collectors.toList());
+
+        // 4. Return the final DTO
+        return new QueueDetailsDTO(queue.getName(), tokenDetails);
     }
 }

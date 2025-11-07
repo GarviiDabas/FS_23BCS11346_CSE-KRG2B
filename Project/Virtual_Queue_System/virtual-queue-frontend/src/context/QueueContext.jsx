@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext'; 
+// FIX: Import from the correct 'api.js' file
 import { getActiveQueues, joinQueue, getMyTokenStatus } from '../services/api';
 
 const QueueContext = createContext(null);
@@ -28,7 +29,7 @@ function reducer(state, action) {
 
 export function QueueProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { user } = useAuth(); 
+  const { user } = useAuth(); // Get the user object
 
   // Fetch initial queues
   useEffect(() => {
@@ -46,7 +47,6 @@ export function QueueProvider({ children }) {
   }, []);
 
   // --- Actions ---
-
   const joinQueueAction = useCallback(async (queueId) => {
     if (!user || !user.id) {
       const err = new Error('You must be logged in to join.');
@@ -55,15 +55,11 @@ export function QueueProvider({ children }) {
     }
     try {
       dispatch({ type: 'SET_STATUS', payload: 'loading' });
+      // Call the correct 'joinQueue' function with 'user.id'
       const token = await joinQueue(queueId, user.id); 
       dispatch({ type: 'SET_TOKEN', payload: token });
       return token;
     } catch (err) {
-      //
-      // THIS IS THE IMPORTANT FIX:
-      // We are changing 'err.response.data.message' to 'err.response.data'
-      // This will grab the plain text message from Spring Boot.
-      //
       const errorMessage = err.response?.data || 'Failed to join the queue.';
       dispatch({ type: 'SET_ERROR', payload: errorMessage });
       throw new Error(errorMessage);

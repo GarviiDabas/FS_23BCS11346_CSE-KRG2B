@@ -1,14 +1,16 @@
 package com.chandigarhuni.virtual_queue_system.dto;
 
 public class TokenStatusResponse {
+    private Long token_id; // ✅ Add this field
     private String queue_name;
     private int token_number;
     private int current_serving;
     private long estimated_wait_time;
     private String status;
 
-    // Constructor
-    public TokenStatusResponse(String queue_name, int token_number, int current_serving, long estimated_wait_time, String status) {
+    // ✅ Updated Constructor (added token_id)
+    public TokenStatusResponse(Long token_id, String queue_name, int token_number, int current_serving, long estimated_wait_time, String status) {
+        this.token_id = token_id;
         this.queue_name = queue_name;
         this.token_number = token_number;
         this.current_serving = current_serving;
@@ -16,7 +18,16 @@ public class TokenStatusResponse {
         this.status = status;
     }
 
-    // Generate Getters and Setters
+    // ✅ Getter/Setter for token_id
+    public Long getToken_id() {
+        return token_id;
+    }
+
+    public void setToken_id(Long token_id) {
+        this.token_id = token_id;
+    }
+
+    // --- Existing Getters and Setters ---
     public String getQueue_name() {
         return queue_name;
     }

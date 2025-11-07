@@ -5,7 +5,7 @@ import com.chandigarhuni.virtual_queue_system.repository.QueueRepository;
 import com.chandigarhuni.virtual_queue_system.service.AdminService;
 import com.chandigarhuni.virtual_queue_system.dto.CreateQueueRequest;
 import com.chandigarhuni.virtual_queue_system.dto.UpdateQueueRequest; // ✅ Added import
-
+import com.chandigarhuni.virtual_queue_system.dto.QueueDetailsDTO; // <-- 1. ADD THIS IMPORT
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,6 +64,16 @@ public class AdminController {
             return ResponseEntity.ok(updatedQueue);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/queue/{id}")
+    public ResponseEntity<QueueDetailsDTO> getQueueDetails(@PathVariable Long id) {
+        try {
+            QueueDetailsDTO queueDetails = adminService.getQueueDetails(id);
+            return ResponseEntity.ok(queueDetails);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }

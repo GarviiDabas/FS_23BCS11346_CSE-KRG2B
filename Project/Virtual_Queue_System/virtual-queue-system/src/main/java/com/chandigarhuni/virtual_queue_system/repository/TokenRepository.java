@@ -20,4 +20,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
     Optional<Token> findTopByQueueOrderByTokenNumberDesc(Queue queue);
 
     long countByQueueAndStatusAndTokenNumberLessThan(Queue queue, String status, int tokenNumber);
+
+    // This query finds a token *only if* it matches both the ID and the User's ID
+Optional<Token> findByTokenIdAndUser_Id(Long tokenId, Long userId);
 }

@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
+import java.util.Optional; // <-- Make sure this is imported
 
 @Service
 public class CustomerService {
@@ -26,32 +26,45 @@ public class CustomerService {
 
     @Transactional
     public Token joinQueue(Long queueId, Long userId) {
-        // 1. Find the Queue and User
         Queue queue = queueRepository.findById(queueId)
                 .orElseThrow(() -> new RuntimeException("Queue not found"));
-        
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 2. Check if user is already in this queue
-        boolean alreadyInQueue = tokenRepository.findByQueueAndUserAndStatus(queue, user, "WAITING").isPresent();
-        if (alreadyInQueue) {
-            throw new RuntimeException("User is already in this queue");
+        // FIX: Check if user is already in queue, if so, just return their token
+        Optional<Token> existingToken = tokenRepository.findByQueueAndUserAndStatus(queue, user, "WAITING");
+        if (existingToken.isPresent()) {
+            return existingToken.get();
         }
 
-        // 3. Find the last token number issued for this queue
         int lastTokenNumber = tokenRepository.findTopByQueueOrderByTokenNumberDesc(queue)
                 .map(Token::getTokenNumber)
-                .orElse(0); // If no tokens, start at 0
+                .orElse(0); 
 
-        // 4. Create the new token
         Token newToken = new Token();
         newToken.setQueue(queue);
         newToken.setUser(user);
         newToken.setTokenNumber(lastTokenNumber + 1);
         newToken.setStatus("WAITING");
 
-        // 5. Save and return the new token
         return tokenRepository.save(newToken);
+    }
+
+    @Transactional
+    public Token cancelToken(Long tokenId, Long userId) {
+        
+        // --- THIS IS THE FIX ---
+        // 1. Find the token *and* verify ownership at the same time.
+        // This avoids the LazyInitializationException.
+        Token token = tokenRepository.findByTokenIdAndUser_Id(tokenId, userId)
+                .orElseThrow(() -> new SecurityException("Token not found or user does not have permission"));
+        // --- END OF FIX ---
+        
+        if (!"WAITING".equals(token.getStatus())) {
+            throw new RuntimeException("Token cannot be cancelled (already served or cancelled)");
+        }
+
+        token.setStatus("CANCELLED");
+        return tokenRepository.save(token);
     }
 }

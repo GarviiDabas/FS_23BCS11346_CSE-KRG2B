@@ -31,38 +31,49 @@ public class AuthController {
     @Autowired
     private JwtUtils jwtUtils;
 
+    // ✅ LOGIN endpoint
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // ✅ SAFER: use orElseThrow instead of .get()
+        // Fetch the authenticated user from DB
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         String jwt = jwtUtils.generateToken(user);
 
-        // ✅ UPDATED: pass user.getId() to AuthResponse
-        return ResponseEntity.ok(new AuthResponse(jwt, user.getName(), user.getRole(), user.getId()));
+        // Return JWT + user info
+        return ResponseEntity.ok(
+                new AuthResponse(jwt, user.getName(), user.getRole(), user.getId())
+        );
     }
 
+    // ✅ REGISTER endpoint
     @PostMapping("/register")
-public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
-    if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-        return ResponseEntity.badRequest().body("Error: Email is already in use!");
-    }
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) {
 
-        // Create new user's account
+        // Check for duplicate email
+        if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body("Error: Email is already in use!");
+        }
+
+        // Create new user account
         User user = new User();
         user.setName(registerRequest.getName());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setContactNumber(registerRequest.getContactNumber());
-        user.setRole("ROLE_CUSTOMER"); // Default role
 
+        // ✅ FIX: make sure your User entity has this field
+        user.setContactNumber(registerRequest.getContactNumber());
+
+        // Default role for customer
+        user.setRole("ROLE_CUSTOMER");
+
+        // Save to DB (table: app_users)
         userRepository.save(user);
 
         return ResponseEntity.ok("User registered successfully!");

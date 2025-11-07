@@ -14,9 +14,9 @@ public class Queue {
     @Column(nullable = false)
     private String name;
 
-    private int avgServiceTime; // Average service time per customer (in minutes, for example)
+    private int avgServiceTime; 
 
-    private int currentTokenNumber; // Keeps track of the last issued token
+    private int currentTokenNumber; 
 
     private boolean isActive;
 
@@ -60,9 +60,12 @@ public class Queue {
         return isActive;
     }
 
+    // --- THIS IS THE FIX ---
+    // Removed the three dots "..." from "boolean... active"
     public void setActive(boolean active) {
-        isActive = active;
+        this.isActive = active;
     }
+    // --- END OF FIX ---
 
     public List<Token> getTokens() {
         return tokens;

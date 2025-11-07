@@ -16,6 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.List;
 
 @Configuration
@@ -28,60 +31,79 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    /**
+     * Password encoder bean for hashing passwords with BCrypt.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * AuthenticationManager used by the authentication endpoints.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
+    /**
+     * CORS configuration bean for frontend communication (React, etc.)
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5173")); // React frontend origin
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+        config.setExposedHeaders(List.of("Authorization"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
+    /**
+     * Main Spring Security configuration.
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 1. Disable CSRF (This is the most important fix)
+            // Disable CSRF since we’re using JWT tokens
             .csrf(csrf -> csrf.disable())
-            
-            // 2. Configure CORS
-            .cors(cors -> cors.configurationSource(request -> {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(List.of("http://localhost:5173")); // Your React app
-                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                config.setAllowedHeaders(List.of("*"));
-                config.setAllowCredentials(true);
-                return config;
-            }))
-            
-            // 3. Set session management to STATELESS
+
+            // Enable CORS using our bean above
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+            // Stateless session — all authentication handled via JWT
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            
-            // 4. Define authorization rules
+
+            // Define route-level authorization
             .authorizeHttpRequests(auth -> auth
-                // Allow all pre-flight OPTIONS requests
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
-                
-                // Allow all requests to auth endpoints
+                // Allow preflight requests
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // Allow authentication endpoints
                 .requestMatchers("/api/auth/**").permitAll()
-                
-                // Allow GET requests for public queues
+
+                // Public endpoints (optional)
                 .requestMatchers(HttpMethod.GET, "/api/queues").permitAll()
-                
-                // Secure Admin endpoints
+
+                // Admin routes
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                
-                // Secure Customer endpoints
-                .requestMatchers("/api/tokens/**").hasRole("CUSTOMER")
+
+                // Customer routes
+                .requestMatchers("/api/tokens/**").hasAnyRole("CUSTOMER", "ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/queues/join").hasRole("CUSTOMER")
-                
-                // All other requests must be authenticated
+
+                // Everything else requires authentication
                 .anyRequest().authenticated()
             )
-            
-            // 5. Add our JWT filter
+
+            // Add JWT filter before UsernamePasswordAuthenticationFilter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-            
+
         return http.build();
     }
 }
