@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simple Registration</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      padding: 20px;
+    }
+    .form {
+      width: 100%;
+      max-width: 360px;
+      background: #fff;
+      padding: 22px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .form h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+    .input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .btn {
+      width: 100%;
+      padding: 10px;
+      border: 0;
+      border-radius: 6px;
+      background: #2563eb;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform .14s ease, box-shadow .14s ease;
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 24px rgba(37,99,235,0.22);
+    }
+    @media (max-width: 400px) {
+      .form { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <form class="form" action="#" method="post" novalidate>
+    <h2>Register</h2>
+    <input class="input" type="text" name="name" placeholder="Name" required>
+    <input class="input" type="email" name="email" placeholder="Email" required>
+    <input class="input" type="password" name="password" placeholder="Password" required>
+    <button class="btn" type="submit">Register</button>
+  </form>
+</body>
+</html>
